@@ -48,7 +48,7 @@ function cargarVideos(){
 	content.innerHTML = '';
 	setTimeout(() => {
 		obtenerVideos();
-	}, 0);
+	}, 3000);
 }
 
 /*FUNCION AUTOEJECUTABLE
