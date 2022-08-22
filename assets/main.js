@@ -1,6 +1,8 @@
-const API='https://youtube-v31.p.rapidapi.com/search?channelId=UCSfkiToSLspGO06IdWhpoMA&part=snippet%2Cid&order=date&maxResults=100';
+//const API='https://youtube-v31.p.rapidapi.com/search?channelId=UCnwiCpx9iPgV6RtIo3WtumQ&part=snippet%2Cid&order=date&maxResults=50';
+const API='https://youtube-v31.p.rapidapi.com/search?channelId=UCnwiCpx9iPgV6RtIo3WtumQ&part=snippet%2Cid&order=date&maxResults=50';
 
 const content = null || document.getElementById('content');
+let cargando = null || document.getElementById('cargando');
 
 const options = {
 	method: 'GET',
@@ -16,6 +18,40 @@ async function fetchData(urlApi){
 	return data;
 }
 
+async function obtenerVideos(){
+	try{
+		const videos = await fetchData(API);
+		let view = `${videos.items.map(video=> `
+                <div class="group relative">
+                <div
+                    class="w-full bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:aspect-none">
+                    <!-- <img src="${video.snippet.thumbnails.high.url}" alt="${video.snippet.description}" class="w-full"> -->
+					<iframe src="https://www.youtube.com/embed/${video.id.videoId}" class="w-full"></iframe>
+                </div>
+                <div class="mt-4 flex justify-between">					
+                    <h3 class="text-sm">					
+					<a href="https://www.youtube.com/watch?v=${video.id.videoId}" style="color:blue" target="_blank">
+                    ${video.snippet.title}</a>
+                    </h3>
+                </div>
+                </div>
+		    `).join('')}`;
+        content.innerHTML = view;
+		cargando.innerText="";
+	}catch (error){
+        console.log(error);
+	}
+}
+
+function cargarVideos(){
+	cargando.innerText="Cargando videos...";	
+	content.innerHTML = '';
+	setTimeout(() => {
+		obtenerVideos();
+	}, 0);
+}
+
+/*FUNCION AUTOEJECUTABLE
 (async ()=>{
 	try{
 		const videos = await fetchData(API);
@@ -37,7 +73,7 @@ async function fetchData(urlApi){
 	}catch (error){
         console.log(error);
 	}
-})();
+})();*/
 
 /*Para ejecutarlo con promesas
 fetch(API, options)
